@@ -1,0 +1,63 @@
+name: CI
+
+# Run this workflow on every push and every pull request targeting main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ---------- FRONTEND (React client) ----------
+  client-build-and-test:
+    name: Client - Install, Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Run client tests
+        working-directory: ./client
+        run: npm test -- --watchAll=false
+        env:
+          CI: true
+
+      - name: Build client
+        working-directory: ./client
+        run: npm run build
+
+  # ---------- BACKEND (Express server) ----------
+  server-build:
+    name: Server - Install & Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: Check server syntax (no runtime start, since no DB is available in CI)
+        working-directory: ./server
+        run: node --check server.js

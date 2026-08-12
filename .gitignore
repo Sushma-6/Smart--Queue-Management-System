@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+.env
+client/.env
+server/.env
+
+# Build output
+client/build/
+
+# OS/editor junk
+.DS_Store

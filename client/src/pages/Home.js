@@ -6,8 +6,8 @@ import { ThemeContext } from "../context/ThemeContext";
 
 function Home() {
   const { darkMode } = useContext(ThemeContext);
-  const queueEntryUrl = `http://${process.env.REACT_APP_HOST || "localhost"}:3000/queue-entry`;
-
+  const queueEntryUrl = process.env.REACT_APP_SITE_URL
+  || `http://${process.env.REACT_APP_HOST || "localhost"}:3000/queue-entry`;
 
   return (
     <div className="themed-page" style={styles.page}>
